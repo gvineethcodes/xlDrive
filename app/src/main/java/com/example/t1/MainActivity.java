@@ -4,6 +4,7 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.media.AudioAttributes;
 import android.media.MediaPlayer;
+import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
@@ -12,6 +13,7 @@ import android.widget.Toast;
 import com.loopj.android.http.AsyncHttpClient;
 import com.loopj.android.http.FileAsyncHttpResponseHandler;
 
+import java.io.BufferedReader;
 import java.io.File;
 import java.io.IOException;
 
@@ -21,6 +23,14 @@ import jxl.Sheet;
 import jxl.Workbook;
 import jxl.WorkbookSettings;
 import jxl.read.biff.BiffException;
+
+import com.opencsv.CSVReader;
+import java.io.IOException;
+import java.io.FileReader;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.net.HttpURLConnection;
+import java.net.URL;
 
 public class MainActivity extends AppCompatActivity {
     MediaPlayer mediaPlayer;
@@ -63,7 +73,7 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-         */
+
 
 
         String URL = "https://github.com/gvineethcodes/drive/raw/main/xlssheet.xls";
@@ -108,6 +118,66 @@ public class MainActivity extends AppCompatActivity {
             }
 
         });
+
+
+
+
+        try {
+        String url = "https://docs.google.com/spreadsheets/d/1VxQruR4Yt1Ive6qLqQZ2iV7qCr4x9GRL49yA9XM5GP8/export?format=csv";
+            CSVReader reader = new CSVReader(new FileReader("https://docs.google.com/spreadsheets/d/1VxQruR4Yt1Ive6qLqQZ2iV7qCr4x9GRL49yA9XM5GP8/export?format=csv"));
+            String[] nextLine;
+            while ((nextLine = reader.readNext()) != null) {
+                // nextLine[] is an array of values from the line
+                Log.e("mylogS",nextLine[0] + nextLine[1] + "etc...");
+            }
+        } catch (IOException e) {
+            Log.e("mylogE",e.getMessage());
+        }
+
+
+         */
+
+        class ReadFile extends AsyncTask<String, Void, String> {
+
+            @Override
+            protected String doInBackground(String... params) {
+                HttpURLConnection conn = null;
+                try {
+                    String urlString = "https://docs.google.com/spreadsheets/d/1VxQruR4Yt1Ive6qLqQZ2iV7qCr4x9GRL49yA9XM5GP8/export?format=csv";
+
+                    URL url = new URL(urlString);
+                    conn = (HttpURLConnection) url.openConnection();
+                    InputStream in = conn.getInputStream();
+                    if(conn.getResponseCode() == 200)
+                    {
+                        BufferedReader br = new BufferedReader(new InputStreamReader(in));
+                        String inputLine;
+                        while ((inputLine = br.readLine()) != null) {
+                            Log.e("mylog",inputLine);
+                        }
+                    }
+
+                }catch (Exception e){
+                    Log.e("mylog", e.toString());
+                }
+                finally
+                {
+                    if(conn!=null)
+                        conn.disconnect();
+                }
+                return null;
+            }
+
+            @Override
+            protected void onPostExecute(String result) {
+
+            }
+
+            @Override
+            protected void onPreExecute() {}
+        }
+
+        new ReadFile().execute("");
 
     }
 }

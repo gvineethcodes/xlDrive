@@ -11,7 +11,7 @@ android {
         targetSdk 31
         versionCode 1
         versionName "1.0"
-
+        multiDexEnabled true
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
 
@@ -39,5 +39,5 @@ dependencies {
     implementation 'com.loopj.android:android-async-http:1.4.10'
     implementation 'com.squareup.picasso:picasso:2.71828'
     implementation 'com.opencsv:opencsv:4.6'
-
+    implementation 'androidx.multidex:multidex:2.0.1'
 }
