@@ -31,6 +31,9 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashMap;
 
 public class MainActivity extends AppCompatActivity {
     MediaPlayer mediaPlayer;
@@ -153,7 +156,55 @@ public class MainActivity extends AppCompatActivity {
                         BufferedReader br = new BufferedReader(new InputStreamReader(in));
                         String inputLine;
                         while ((inputLine = br.readLine()) != null) {
-                            Log.e("mylog",inputLine);
+                            /*
+                            String strings = Arrays.toString(inputLine.split(","));
+//                            String string = " ";
+//                            for(String s : strings)
+//                                string = string + s+"\t";
+//                            Log.e("mylog",string);
+
+
+                            strings = strings.replace("\\[|,|\\]","");
+                            //String[] strings1 = strings.split(",|ALBUM|\\[");
+                            String[] strings1 = strings.split("ALBUM");
+
+                            String artist = strings1[0];
+                            Log.e("mylogArtist",artist);
+
+                            for(String s : strings1)
+                            Log.e("mylogAlbum",s);
+
+
+                             */
+
+                            String[] AS = inputLine.split("ALBUM");
+                            Log.e("mylogArtist",AS[0].replace(",",""));
+
+                            for(String as : AS){
+                                String[] AS1 = as.split(",");
+                                if(AS1.length>1){
+                                    Log.e("mylogAlbum",AS1[1]);
+                                    Log.e("mylogImage",AS1[AS1.length-1]);
+                                }
+                                ArrayList<String> albumItems = new ArrayList<>();
+                                HashMap<String,String> albumItemLinks = new HashMap<>();
+                                for(int i =2;i<AS1.length-1;i++){
+                                    if(i%2==0) {
+                                        //Log.e("mylogItem " + i, AS1[i]);
+                                        albumItems.add(AS1[i]);
+                                    }
+                                    else {
+                                        //Log.e("mylogItemLink "+i,AS1[i]);
+                                        albumItemLinks.put(AS1[i-1],AS1[i]);
+                                    }
+
+                                }
+
+                                for (String ai : albumItems) Log.e("mylogAI ",ai);
+                                for (String ail : albumItemLinks.values()) Log.e("mylogAIL ",ail);
+
+                            }
+
                         }
                     }
 
